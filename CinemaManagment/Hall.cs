@@ -14,7 +14,8 @@ namespace CinemaManagment
         public int Column { get; set; }
         public string Name { get; set; }
 
-        public Seat[,] seats = { };
+        public Seat[,] Seats = {};
+
         public List<Movie> Movies = new List<Movie>();
         public Hall(string name, int row, int column)
         {
@@ -22,7 +23,61 @@ namespace CinemaManagment
             Name = name;
             Row = row;
             Column = column;
-            seats = new Seat[Row, Column];
+            AddSeats(row, column);
+        }
+        public void AddSeats(int row,int column)
+        {
+            Seats = new Seat[row, column];
+        }
+        public void AddMovie(Movie movie)
+        {
+            bool isExists = Movies.Any(x => x.Name == movie.Name);
+            if(isExists)
+            {
+                Console.WriteLine("Bu film artiq movcuddur :");
+            }
+            else
+            {
+                Movies.Add(movie);
+            }
+        }
+        public void GetMovies()
+        {
+            foreach (Movie movie in Movies)
+            {
+                Console.WriteLine(movie);
+            }
+        }
+        public Movie GetMovie(int id) => Movies.Find(x => x.Id == id);
+        public void GetSeats()
+        {
+            for(int i = 0; i < Seats.GetLength(1); i++)
+            {
+                Console.Write($"  {i + 1}   ");
+            }
+            Console.WriteLine();
+            for (int i = 0; i < Seats.GetLength(0); i++)
+            {
+                Console.Write($"{i + 1}. ");
+                for (int j = 0; j < Seats.GetLength(1); j++)
+                {
+                    if (Seats[i,j].Status == Status.Empty)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+
+                    }
+                    Console.Write(Seats[i, j].Status + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+        public override string ToString()
+        {
+            return $@"{Id}. {Name} - Sira : {Row}, Sutun : {Column}";
         }
     }
 }

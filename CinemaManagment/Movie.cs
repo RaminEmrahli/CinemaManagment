@@ -8,29 +8,36 @@ namespace CinemaManagment
 {
     internal class Movie
     {
-        public string Name { get; set; }//unique olmalidi
+        private static int _id;
+        public int Id { get; set; }
+        public string Name { get; set; }
         public double IMDB { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
 
-        List<Ticket> tickets = new List<Ticket>();
-        public Movie(string name, double imdb, DateTime startTime, DateTime endTime)
+        public List<Ticket> Tickets = new List<Ticket>();
+        public Movie(string name, double imdb, TimeOnly startTime, TimeOnly endTime)
         {
+            Id = ++_id;
             Name = name;
             IMDB = imdb;
             StartTime = startTime;
             EndTime = endTime;
         }
-        //c) Başlama saatı, bir dənə inputdan təşkil olunacaq, saatı qeyd edərsiniz və
-        //TimeOnly struct-u vasitəsilə başlama saatını da təyin edərsiniz, yəni məsələn, deyəlim ki, başlama saatını 15 yazdınız,
-        //saatı təyin edərkən, belə yazmalısınız : TimeOnly start_time = new TimeOnly(15, 0);
+        public void GetTickets()
+        {
+            foreach (var ticket in Tickets)
+            {
+                Console.WriteLine($"{ticket.FirstName} {ticket.LastName}");
+            }
+        }
+        public override string ToString()
+        {
+            return $@"{Id}. {Name}
+Baslama saati : {StartTime}
+Bitme saati : {EndTime}
+IMDB deyeri : {IMDB}";
+        }
 
-        //d) Bitmə saatı : Eyni başlama saatı kimi təyin edəcəksiniz. Başlama və bitmə saatlarını təyin edərkən,
-        //saat dəyərinin 23 dən böyük olmamalı olduğunu və
-        //bitmə saatının başlama saatından böyük olmalı olduğunu nəzərinizə çatdırım.
-
-        //e) Zalı seçməlisiniz. Zalların siyahısı gələcək daxil etməli olduğunuz Id dəyərinə görə həmin zalı tapmalıdır.
-        //Əgər tapmasa, zalı seçməyinizi tələb
-        //etməlidir. Tapdığı halda isə, həmin Hall-un içərisindəki Movie List-inə yaradacağınız Movie-ni əlavə etməlidir.
     }
 }

@@ -8,11 +8,16 @@ namespace CinemaManagment
 {
     internal class Seat
     {
-        public enum Status
-        {
-            Empty,
-            Reserved
-        }
-        //b) Seat class-ı yaranacaq və burda enum tipindən status olacaq, yaradacağınız bu enum-un iki dəyəri olacaq, Empty(default) və Reserved.
+        public int Id { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public int MovieId { get; set; }
+
+        public Status Status { get; set; } = Status.Empty;
+    }
+    enum Status
+    {
+        Empty,
+        Reserved
     }
 }

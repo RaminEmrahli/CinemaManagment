@@ -8,7 +8,17 @@ namespace CinemaManagment
 {
     internal class Ticket
     {
-        public string CustomerName { get; set; }
-        public string CustomerLastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public Ticket(string firstname,string lastname,int row,int column)
+        {
+            FirstName = firstname;
+            LastName = lastname;
+            Row = row;
+            Column = column;
+        } 
+        
     }
 }
