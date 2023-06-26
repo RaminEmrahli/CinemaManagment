@@ -14,7 +14,7 @@ namespace CinemaManagment
         public int Column { get; set; }
         public string Name { get; set; }
 
-        public Seat[,] Seats = {};
+        public Seat[,] Seats= { };
 
         public List<Movie> Movies = new List<Movie>();
         public Hall(string name, int row, int column)
@@ -28,8 +28,15 @@ namespace CinemaManagment
         public void AddSeats(int row,int column)
         {
             Seats = new Seat[row, column];
+            for (int i = 0; i < Seats.GetLength(0); i++)
+            {
+                for (int j = 0; j < Seats.GetLength(1); j++)
+                {
+                    Seats[i, j] = new Seat();
+                }
+            }
         }
-        public void AddMovie(Movie movie)
+        public void AddMovie(Movie movie,int hallId)
         {
             bool isExists = Movies.Any(x => x.Name == movie.Name);
             if(isExists)
@@ -39,6 +46,7 @@ namespace CinemaManagment
             else
             {
                 Movies.Add(movie);
+                Console.WriteLine($"Film {hallId} -ci zala elave olundu ");
             }
         }
         public void GetMovies()
@@ -71,9 +79,11 @@ namespace CinemaManagment
 
                     }
                     Console.Write(Seats[i, j].Status + " ");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine();
             }
+            Console.ForegroundColor = ConsoleColor.White;
         }
         public override string ToString()
         {

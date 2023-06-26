@@ -24,11 +24,23 @@ namespace CinemaManagment
             StartTime = startTime;
             EndTime = endTime;
         }
+        public void AddTicket(Ticket ticket)
+        {
+            Tickets.Add(ticket);
+            Console.WriteLine("Bilet satisi tamamlanmisdir, xos izlemeler");
+        }
         public void GetTickets()
         {
-            foreach (var ticket in Tickets)
+            if(Tickets.Count > 0)
             {
-                Console.WriteLine($"{ticket.FirstName} {ticket.LastName}");
+                foreach (var ticket in Tickets)
+                {
+                    Console.WriteLine($"{ticket.FirstName} {ticket.LastName} sira: {ticket.Row} yer: {ticket.Column}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Sifaris yoxdur");
             }
         }
         public override string ToString()
@@ -38,6 +50,5 @@ Baslama saati : {StartTime}
 Bitme saati : {EndTime}
 IMDB deyeri : {IMDB}";
         }
-
     }
 }

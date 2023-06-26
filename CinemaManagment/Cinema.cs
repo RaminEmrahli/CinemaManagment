@@ -13,10 +13,19 @@ namespace CinemaManagment
         {
             Name = name;
         }
-        public  List<Hall> Halls = new List<Hall>();
+        public List<Hall> Halls = new List<Hall>();
         public void AddHall(Hall hall)
         {
-            Halls.Add(hall);
+            bool isExists = Halls.Any(h => h.Name == hall.Name);
+            if (isExists)
+            {
+                Console.WriteLine("Bu zal artiq movcuddur");
+            }
+            else
+            {
+                Halls.Add(hall);
+                Console.WriteLine("Zal elave edildi\n\n");
+            }
         }
         public void GetHalls()
         {
@@ -25,6 +34,8 @@ namespace CinemaManagment
                 Console.WriteLine(hall);
             }
         }
-        public Hall GetHall(int id)=> Halls.Find(h => h.Id == id);
+
+        public Hall GetHall(int id) => Halls.Find(x => x.Id == id);
+
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CinemaManagment
+﻿using System.Runtime.CompilerServices;
+
+namespace CinemaManagment
 {
     internal class Program
     {
@@ -6,88 +8,68 @@
         static void Main(string[] args)
         {
             Cinema cinema = new Cinema("Park Cinema");
-            Hall hall = new Hall("Hall A", 10, 8);
-            Movie movie1 = new Movie("Movie 1", 8.5, new TimeOnly(12, 00), new TimeOnly(14, 00));
-            Movie movie2 = new Movie("Movie 2", 8.5, new TimeOnly(14, 00), new TimeOnly(16, 00));
-            Movie movie3 = new Movie("Movie 3", 8.5, new TimeOnly(16, 00), new TimeOnly(18, 00));
-            hall.Movies.Add(movie1);
-            hall.Movies.Add(movie2);
-            hall.Movies.Add(movie3);
-            cinema.Halls.Add(hall);
             int result = Enter();
-            Console.Clear();
-            while(result != 0)
+            while (result != 0)
             {
-                switch (result) 
+                switch (result)
                 {
                     case 1:
                         {
-                            //Console.WriteLine("Zalin adini daxil edin :");
-                            //string name = Console.ReadLine();
-                            //Console.WriteLine("Zalin sira sayini daxil edin :");
-                            //int row = int.Parse(Console.ReadLine());
-                            //Console.WriteLine("Her siradaki yer sayini daxil edin :");
-                            //int column = int.Parse(Console.ReadLine());
-                            //Hall newHall = new Hall(name, row, column);
-                            //result = Enter();
+                            Console.Clear();
+                            Hall newHall = CreateHall();
+                            cinema.AddHall(newHall);
+                            result = Enter();
                             break;
                         }
                     case 2:
                         {
-                            //Console.WriteLine("Filmin adini daxil edin :");
-                            //string name = Console.ReadLine();
-                            //Console.WriteLine("Filmin IMDB deyerini daxil edin :");
-                            //double imdb = double.Parse(Console.ReadLine());
-                            //Console.WriteLine("Filmin baslama saatini daxil edin :");
-                            //int start_time = int.Parse(Console.ReadLine());
-                            //TimeOnly startTime = new TimeOnly(start_time,0);
-                            //int end_time = int.Parse(Console.ReadLine());
-                            //TimeOnly endTime = new TimeOnly(end_time, 0);
-                            //Movie movie = new Movie(name, imdb, startTime, endTime);
-                            //result = Enter();
+                            Console.Clear();
+                            Movie newMovie = CreateMovie(cinema);
+                            Hall hall = GetHall(cinema);
+                            hall.AddMovie(newMovie, hall.Id);
+                            result = Enter();
                             break;
                         }
                     case 3:
                         {
-                            Console.WriteLine("Adinizi daxil edin :");
-                            string firstname = Console.ReadLine();
-                            Console.WriteLine("Soyadinizi daxil edin :");
-                            string lastname = Console.ReadLine();
-                            Console.WriteLine("Zali secin");
-                            cinema.GetHalls();
-                            int hallId = int.Parse(Console.ReadLine());
-                            Hall h = cinema.GetHall(hallId);
-                            while (h == null)
+                            Console.Clear();
+                            if (cinema.Halls.Count > 0)
                             {
-                                Console.WriteLine("Zal tapilmadi :");
-                                hallId = int.Parse(Console.ReadLine());
+                                Hall h = GetHall(cinema);
+                                if (h.Movies.Count > 0)
+                                {
+                                    Movie mov = GetMovie(h);
+                                    h.GetSeats();
+                                    Ticket ticket = BuyTicket(h);
+                                    mov.AddTicket(ticket);
+                                    result = Enter();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Teessuf ki, film movcud deyildir");
+                                    result = Enter();
+                                }
                             }
-                            Console.WriteLine("Filmi Secin :");
-                            hall.GetMovies();
-                            int movieId = int.Parse(Console.ReadLine());
-                            Movie mov = hall.GetMovie(movieId);
-                            while (mov == null)
+                            else
                             {
-                                Console.WriteLine("Film tapilmadi :");
-                                movieId = int.Parse(Console.ReadLine());
+                                Console.WriteLine("Teessuf ki,zal movcud deyildir");
+                                result = Enter();
                             }
-                            hall.GetSeats();
-                            Console.WriteLine("Sirani secin :");
-                            int row = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Yerinizi secin :");
-                            int column = int.Parse(Console.ReadLine());
-                            while (hall.Seats[row - 1, column - 1].Status == Status.Reserved)
-                            {
-                                Console.WriteLine("Bu yer rezerv olunmusdur :");
-                                Console.WriteLine("Sirani secin :");
-                                row = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Yerinizi secin :");
-                                column = int.Parse(Console.ReadLine());
-                            }
-                            hall.Seats[row - 1, column - 1].Status = Status.Reserved;
-                            Ticket ticket = new Ticket(firstname, lastname, row, column);
-                            mov.Tickets.Add(ticket);
-                            Console.WriteLine("Bilet satisi tamamlanmisdir, xos izlemeler");
+                            break;
+                        }
+                    case 4:
+                        {
+                            Console.Clear();
+                            Hall h = GetHall(cinema);
+                            Movie mov = GetMovie(h);
+                            mov.GetTickets();
+                            result = Enter();
+                            break;
+                        }
+                        default:
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Duzgun klik edilmedi :\n\n");
                             result = Enter();
                             break;
                         }
@@ -103,6 +85,99 @@
             Console.WriteLine("Satislarin siyahisini gormek ucun '4' duymesini klikleyin");
             int result = int.Parse(Console.ReadLine());
             return result;
+        }
+        public static Hall CreateHall()
+        {
+            Console.WriteLine("zalin adini daxil edin :");
+            string name = Console.ReadLine();
+            Console.WriteLine("zalin sira sayini daxil edin :");
+            int row = int.Parse(Console.ReadLine());
+            Console.WriteLine("her siradaki yer sayini daxil edin :");
+            int column = int.Parse(Console.ReadLine());
+            return new Hall(name, row, column);
+        }
+        public static Movie CreateMovie(Cinema cinema)
+        {
+            Console.WriteLine("Filmin adini daxil edin :");
+            string name = Console.ReadLine();
+            Console.WriteLine("Filmin IMDB deyerini daxil edin :");
+            double imdb = double.Parse(Console.ReadLine());
+            while (imdb < 0 || imdb > 10)
+            {
+                Console.WriteLine("IMDB deyeri 0 ve 10 arasinda qiymet almalidir :");
+                imdb = double.Parse(Console.ReadLine());
+            }
+            Console.WriteLine("Filmin baslama saatini daxil edin :");
+            int start_time = int.Parse(Console.ReadLine());
+            while (start_time > 22)
+            {
+                Console.WriteLine("Filmin baslama saati duzgun daxil edilmedi :");
+                start_time = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine("Filmin bitme saatini daxil edin :");
+            int end_time = int.Parse(Console.ReadLine());
+            while (end_time > 23 || end_time <= start_time)
+            {
+                Console.WriteLine("Filmin bitme saati duzgun daxil edilmedi :");
+                end_time = int.Parse(Console.ReadLine());
+            }
+            TimeOnly startTime = new TimeOnly(start_time, 0);
+            TimeOnly endTime = new TimeOnly(end_time, 0);
+            return new Movie(name, imdb, startTime,endTime);
+        }
+        public static Hall GetHall(Cinema cinema)
+        {
+            Console.WriteLine("Zali secin :");
+            cinema.GetHalls();
+            int hallId = int.Parse(Console.ReadLine());
+            Hall hall = cinema.GetHall(hallId);
+            while (hall == null)
+            {
+                Console.WriteLine("Zal tapilmadi,ID-ni duzgun daxil edin :");
+                hallId = int.Parse(Console.ReadLine());
+                hall = cinema.GetHall(hallId);
+            }
+            return hall;
+        }
+        public static Movie GetMovie(Hall h)
+        {
+            Console.WriteLine("Filmi Secin :");
+            h.GetMovies();
+            int movieId = int.Parse(Console.ReadLine());
+            Movie mov = h.GetMovie(movieId);
+            while (mov == null)
+            {
+                Console.WriteLine("Film tapilmadi :");
+                movieId = int.Parse(Console.ReadLine());
+                mov = h.GetMovie(movieId);
+            }
+            return mov;
+        }
+        public static Ticket BuyTicket(Hall h)
+        {
+            Console.WriteLine("Adinizi daxil edin :");
+            string firstname = Console.ReadLine();
+            while (firstname == "")
+            {
+                Console.WriteLine("Adinzi duzgun daxil edin:");
+                firstname = Console.ReadLine();
+            }
+            Console.WriteLine("Soyadinizi daxil edin :");
+            string lastname = Console.ReadLine();
+            Console.WriteLine("Sirani secin :");
+            int row = int.Parse(Console.ReadLine());
+            Console.WriteLine("Yerinizi secin :");
+            int column = int.Parse(Console.ReadLine());
+            while (h.Seats[row - 1, column - 1].Status == Status.Reserved)
+            {
+                Console.WriteLine("Bu yer rezerv olunmusdur :");
+                Console.WriteLine("Sirani secin :");
+                row = int.Parse(Console.ReadLine());
+                Console.WriteLine("Yerinizi secin :");
+                column = int.Parse(Console.ReadLine());
+            }
+            h.Seats[row - 1, column - 1].Status = Status.Reserved;
+            return new Ticket(firstname, lastname, row, column);
         }
     }
 }
