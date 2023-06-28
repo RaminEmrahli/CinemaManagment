@@ -17,9 +17,10 @@ namespace CinemaManagment
         public Seat[,] Seats= { };
 
         public List<Movie> Movies = new List<Movie>();
-        public Hall(string name, int row, int column)
+        public Hall(string name, int row, int column,Cinema cinema)
         {
-            Id = ++_id;
+
+            Id = cinema.Halls.Count + 1;
             Name = name;
             Row = row;
             Column = column;
@@ -36,14 +37,27 @@ namespace CinemaManagment
                 }
             }
         }
-        public void AddMovie(Movie movie,int hallId)
+        public void AddMovie(Movie movie, int hallId)
         {
-            bool isExists = Movies.Any(x => x.Name == movie.Name);
-            if(isExists)
+            bool isFounded = false;
+            foreach (var item in Movies)
             {
+                if (movie.StartTime < item.StartTime && movie.EndTime <= item.StartTime || movie.StartTime >= item.EndTime)
+                {
+                    isFounded = false;
+                }
+                else
+                {
+                    isFounded = true;
+                    break;
+                }
+            }
+            bool isExists = Movies.Any(x => x.Name == movie.Name);
+            if (isExists || !isExists && isFounded)
+            { 
                 Console.WriteLine("Bu film artiq movcuddur :");
             }
-            else
+            else if(!isFounded && !isExists)
             {
                 Movies.Add(movie);
                 Console.WriteLine($"Film {hallId} -ci zala elave olundu ");

@@ -16,7 +16,7 @@ namespace CinemaManagment
                     case 1:
                         {
                             Console.Clear();
-                            Hall newHall = CreateHall();
+                            Hall newHall = CreateHall(cinema);
                             cinema.AddHall(newHall);
                             result = Enter();
                             break;
@@ -24,8 +24,8 @@ namespace CinemaManagment
                     case 2:
                         {
                             Console.Clear();
-                            Movie newMovie = CreateMovie(cinema);
                             Hall hall = GetHall(cinema);
+                            Movie newMovie = CreateMovie(cinema,hall);
                             hall.AddMovie(newMovie, hall.Id);
                             result = Enter();
                             break;
@@ -76,6 +76,7 @@ namespace CinemaManagment
                 }
             }
         }
+        #region AllMethods
         public static int Enter()
         {
             Console.WriteLine("Proqramdan cixis ucun '0' duymesini klikleyin");
@@ -86,7 +87,7 @@ namespace CinemaManagment
             int result = int.Parse(Console.ReadLine());
             return result;
         }
-        public static Hall CreateHall()
+        public static Hall CreateHall(Cinema cinema)
         {
             Console.WriteLine("zalin adini daxil edin :");
             string name = Console.ReadLine();
@@ -94,9 +95,9 @@ namespace CinemaManagment
             int row = int.Parse(Console.ReadLine());
             Console.WriteLine("her siradaki yer sayini daxil edin :");
             int column = int.Parse(Console.ReadLine());
-            return new Hall(name, row, column);
+            return new Hall(name, row, column,cinema);
         }
-        public static Movie CreateMovie(Cinema cinema)
+        public static Movie CreateMovie(Cinema cinema,Hall hall)
         {
             Console.WriteLine("Filmin adini daxil edin :");
             string name = Console.ReadLine();
@@ -123,7 +124,7 @@ namespace CinemaManagment
             }
             TimeOnly startTime = new TimeOnly(start_time, 0);
             TimeOnly endTime = new TimeOnly(end_time, 0);
-            return new Movie(name, imdb, startTime,endTime);
+            return new Movie(name, imdb, startTime,endTime,hall);
         }
         public static Hall GetHall(Cinema cinema)
         {
@@ -179,5 +180,6 @@ namespace CinemaManagment
             h.Seats[row - 1, column - 1].Status = Status.Reserved;
             return new Ticket(firstname, lastname, row, column);
         }
+        #endregion
     }
 }

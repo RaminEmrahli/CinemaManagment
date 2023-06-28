@@ -8,7 +8,6 @@ namespace CinemaManagment
 {
     internal class Movie
     {
-        private static int _id;
         public int Id { get; set; }
         public string Name { get; set; }
         public double IMDB { get; set; }
@@ -16,9 +15,9 @@ namespace CinemaManagment
         public TimeOnly EndTime { get; set; }
 
         public List<Ticket> Tickets = new List<Ticket>();
-        public Movie(string name, double imdb, TimeOnly startTime, TimeOnly endTime)
+        public Movie(string name, double imdb, TimeOnly startTime, TimeOnly endTime,Hall hall)
         {
-            Id = ++_id;
+            Id = hall.Movies.Count + 1;
             Name = name;
             IMDB = imdb;
             StartTime = startTime;
