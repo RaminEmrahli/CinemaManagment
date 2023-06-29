@@ -27,18 +27,7 @@ namespace CinemaManagment
             Row = row;
             Column = column;
         }
-        public Seat[,] AddSeats()
-        {
-            Seats = new Seat[Row, Column];
-            for (int i = 0; i < Seats.GetLength(0); i++)
-            {
-                for (int j = 0; j < Seats.GetLength(1); j++)
-                {
-                    Seats[i, j] = new Seat();
-                }
-            }
-            return Seats;
-        }
+       
         public void AddMovie(Movie movie, int hallId)
         {
             bool isFounded = false;
@@ -74,6 +63,18 @@ namespace CinemaManagment
             }
         }
         public Movie GetMovie(int id) => Movies.Find(x => x.Id == id);
+        public Seat[,] AddSeats()
+        {
+            Seats = new Seat[Row, Column];
+            for (int i = 0; i < Seats.GetLength(0); i++)
+            {
+                for (int j = 0; j < Seats.GetLength(1); j++)
+                {
+                    Seats[i, j] = new Seat();
+                }
+            }
+            return Seats;
+        }
         public Seat[,] GetSeats(int movieId)
         {
             Seat[,] seats = dic[movieId];
