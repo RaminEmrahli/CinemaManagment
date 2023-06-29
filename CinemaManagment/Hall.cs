@@ -14,21 +14,22 @@ namespace CinemaManagment
         public int Column { get; set; }
         public string Name { get; set; }
 
-        public Seat[,] Seats= { };
+        Seat[,] Seats = { };
 
         public List<Movie> Movies = new List<Movie>();
-        public Hall(string name, int row, int column,Cinema cinema)
+
+        Dictionary<int, Seat[,]> dic = new Dictionary<int, Seat[,]>();
+        public Hall(string name, int row, int column, Cinema cinema)
         {
 
             Id = cinema.Halls.Count + 1;
             Name = name;
             Row = row;
             Column = column;
-            AddSeats(row, column);
         }
-        public void AddSeats(int row,int column)
+        public Seat[,] AddSeats()
         {
-            Seats = new Seat[row, column];
+            Seats = new Seat[Row, Column];
             for (int i = 0; i < Seats.GetLength(0); i++)
             {
                 for (int j = 0; j < Seats.GetLength(1); j++)
@@ -36,6 +37,7 @@ namespace CinemaManagment
                     Seats[i, j] = new Seat();
                 }
             }
+            return Seats;
         }
         public void AddMovie(Movie movie, int hallId)
         {
@@ -60,6 +62,7 @@ namespace CinemaManagment
             else if(!isFounded && !isExists)
             {
                 Movies.Add(movie);
+                dic.Add(movie.Id, AddSeats());
                 Console.WriteLine($"Film {hallId} -ci zala elave olundu ");
             }
         }
@@ -71,19 +74,20 @@ namespace CinemaManagment
             }
         }
         public Movie GetMovie(int id) => Movies.Find(x => x.Id == id);
-        public void GetSeats()
+        public Seat[,] GetSeats(int movieId)
         {
-            for(int i = 0; i < Seats.GetLength(1); i++)
+            Seat[,] seats = dic[movieId];
+            for(int i = 0; i < seats.GetLength(1); i++)
             {
                 Console.Write($"  {i + 1}   ");
             }
             Console.WriteLine();
-            for (int i = 0; i < Seats.GetLength(0); i++)
+            for (int i = 0; i < seats.GetLength(0); i++)
             {
                 Console.Write($"{i + 1}. ");
-                for (int j = 0; j < Seats.GetLength(1); j++)
+                for (int j = 0; j < seats.GetLength(1); j++)
                 {
-                    if (Seats[i,j].Status == Status.Empty)
+                    if (seats[i,j].Status == Status.Empty)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                     }
@@ -92,12 +96,13 @@ namespace CinemaManagment
                         Console.ForegroundColor = ConsoleColor.Green;
 
                     }
-                    Console.Write(Seats[i, j].Status + " ");
+                    Console.Write(seats[i, j].Status + " ");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine();
             }
             Console.ForegroundColor = ConsoleColor.White;
+            return seats;
         }
         public override string ToString()
         {

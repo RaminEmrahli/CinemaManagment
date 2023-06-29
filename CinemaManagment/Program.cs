@@ -24,9 +24,16 @@ namespace CinemaManagment
                     case 2:
                         {
                             Console.Clear();
-                            Hall hall = GetHall(cinema);
-                            Movie newMovie = CreateMovie(cinema,hall);
-                            hall.AddMovie(newMovie, hall.Id);
+                            if(cinema.Halls.Count > 0)
+                            {
+                                Hall hall = GetHall(cinema);
+                                Movie newMovie = CreateMovie(hall);
+                                hall.AddMovie(newMovie, hall.Id);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Zal movcud deyildir :\n");
+                            }
                             result = Enter();
                             break;
                         }
@@ -39,20 +46,19 @@ namespace CinemaManagment
                                 if (h.Movies.Count > 0)
                                 {
                                     Movie mov = GetMovie(h);
-                                    h.GetSeats();
-                                    Ticket ticket = BuyTicket(h);
+                                    Ticket ticket = BuyTicket(mov.Id,h);
                                     mov.AddTicket(ticket);
                                     result = Enter();
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Teessuf ki, film movcud deyildir");
+                                    Console.WriteLine("Teessuf ki, film movcud deyildir\n");
                                     result = Enter();
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Teessuf ki,zal movcud deyildir");
+                                Console.WriteLine("Teessuf ki,zal movcud deyildir\n");
                                 result = Enter();
                             }
                             break;
@@ -60,9 +66,23 @@ namespace CinemaManagment
                     case 4:
                         {
                             Console.Clear();
-                            Hall h = GetHall(cinema);
-                            Movie mov = GetMovie(h);
-                            mov.GetTickets();
+                            if (cinema.Halls.Count != 0)
+                            {
+                                Hall h = GetHall(cinema);
+                                if(h.Movies.Count != 0)
+                                {
+                                    Movie mov = GetMovie(h);
+                                    mov.GetTickets();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Film movcud deyildir :\n");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Zal movcud deyildir :\n");
+                            }
                             result = Enter();
                             break;
                         }
@@ -97,7 +117,7 @@ namespace CinemaManagment
             int column = int.Parse(Console.ReadLine());
             return new Hall(name, row, column,cinema);
         }
-        public static Movie CreateMovie(Cinema cinema,Hall hall)
+        public static Movie CreateMovie(Hall hall)
         {
             Console.WriteLine("Filmin adini daxil edin :");
             string name = Console.ReadLine();
@@ -115,6 +135,7 @@ namespace CinemaManagment
                 Console.WriteLine("Filmin baslama saati duzgun daxil edilmedi :");
                 start_time = int.Parse(Console.ReadLine());
             }
+            TimeOnly startTime = new TimeOnly(start_time, 0);
             Console.WriteLine("Filmin bitme saatini daxil edin :");
             int end_time = int.Parse(Console.ReadLine());
             while (end_time > 23 || end_time <= start_time)
@@ -122,7 +143,6 @@ namespace CinemaManagment
                 Console.WriteLine("Filmin bitme saati duzgun daxil edilmedi :");
                 end_time = int.Parse(Console.ReadLine());
             }
-            TimeOnly startTime = new TimeOnly(start_time, 0);
             TimeOnly endTime = new TimeOnly(end_time, 0);
             return new Movie(name, imdb, startTime,endTime,hall);
         }
@@ -154,7 +174,7 @@ namespace CinemaManagment
             }
             return mov;
         }
-        public static Ticket BuyTicket(Hall h)
+        public static Ticket BuyTicket(int movieId,Hall h)
         {
             Console.WriteLine("Adinizi daxil edin :");
             string firstname = Console.ReadLine();
@@ -165,11 +185,12 @@ namespace CinemaManagment
             }
             Console.WriteLine("Soyadinizi daxil edin :");
             string lastname = Console.ReadLine();
+            Seat[,] Seats= h.GetSeats(movieId);
             Console.WriteLine("Sirani secin :");
             int row = int.Parse(Console.ReadLine());
             Console.WriteLine("Yerinizi secin :");
             int column = int.Parse(Console.ReadLine());
-            while (h.Seats[row - 1, column - 1].Status == Status.Reserved)
+            while (Seats[row - 1, column - 1].Status == Status.Reserved)
             {
                 Console.WriteLine("Bu yer rezerv olunmusdur :");
                 Console.WriteLine("Sirani secin :");
@@ -177,7 +198,7 @@ namespace CinemaManagment
                 Console.WriteLine("Yerinizi secin :");
                 column = int.Parse(Console.ReadLine());
             }
-            h.Seats[row - 1, column - 1].Status = Status.Reserved;
+            Seats[row - 1, column - 1].Status = Status.Reserved;
             return new Ticket(firstname, lastname, row, column);
         }
         #endregion

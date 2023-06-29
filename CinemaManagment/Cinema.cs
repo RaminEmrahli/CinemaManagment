@@ -34,7 +34,6 @@ namespace CinemaManagment
                 Console.WriteLine(hall);
             }
         }
-
         public Hall GetHall(int id) => Halls.Find(x => x.Id == id);
 
     }
