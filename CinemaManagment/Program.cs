@@ -11,11 +11,12 @@ namespace CinemaManagment
             int result = Enter();
             while (result != 0)
             {
+                Console.Clear();
                 switch (result)
                 {
                     case 1:
                         {
-                            Console.Clear();
+                            //Console.Clear();
                             Hall newHall = CreateHall(cinema);
                             cinema.AddHall(newHall);
                             result = Enter();
@@ -23,7 +24,7 @@ namespace CinemaManagment
                         }
                     case 2:
                         {
-                            Console.Clear();
+                            //Console.Clear();
                             if(cinema.Halls.Count > 0)
                             {
                                 Hall hall = GetHall(cinema);
@@ -39,7 +40,7 @@ namespace CinemaManagment
                         }
                     case 3:
                         {
-                            Console.Clear();
+                            // Console.Clear();
                             if (cinema.Halls.Count > 0)
                             {
                                 Hall h = GetHall(cinema);
@@ -65,7 +66,7 @@ namespace CinemaManagment
                         }
                     case 4:
                         {
-                            Console.Clear();
+                            //Console.Clear();
                             if (cinema.Halls.Count != 0)
                             {
                                 Hall h = GetHall(cinema);
@@ -88,7 +89,7 @@ namespace CinemaManagment
                         }
                         default:
                         {
-                            Console.Clear();
+                           // Console.Clear();
                             Console.WriteLine("Duzgun klik edilmedi :\n\n");
                             result = Enter();
                             break;
